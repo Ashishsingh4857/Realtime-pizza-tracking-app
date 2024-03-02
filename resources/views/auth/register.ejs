@@ -1,6 +1,12 @@
 <section class="login flex justify-center pt-24">
   <div class="w-full max-w-xs">
-    <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <form
+      class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+      action="/register"
+      method="post">
+      <% if(messages.error) { %>
+      <span class="text-red-500 text-sm"><%= messages.error %></span>
+      <% } %>
       <div class="mb-4">
         <label
           class="block text-gray-700 text-sm font-bold mb-2"
@@ -11,7 +17,9 @@
           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           id="username"
           type="text"
-          placeholder="Enter Your Full Name" />
+          name="name"
+          placeholder="Enter Your Full Name"
+          value="<%= messages.name  %>" />
       </div>
       <div class="mb-4">
         <label
@@ -23,7 +31,9 @@
           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           id="useremail"
           type="email"
-          placeholder="Enter your Email" />
+          name="email"
+          placeholder="Enter your Email"
+          value="<%= messages.email %>" />
       </div>
       <div class="mb-6">
         <label
@@ -35,13 +45,14 @@
           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
           id="password"
           type="password"
+          name="password"
           placeholder="******************" />
         <!-- <p class="text-red-500 text-xs italic">Please choose a password.</p> -->
       </div>
       <div class="flex items-center justify-between">
         <button
           class="btn-primary text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline">
-          Sign In
+          Register
         </button>
         <a
           class="inline-block align-baseline font-bold text-sm"
