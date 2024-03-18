@@ -33,32 +33,45 @@
         >
       </div>
       <!-- address -->
+      <% if ( user ) { %>
       <div>
         <form
-          action="#"
+          action="/orders"
+          method="post"
           class="mt-12">
+          <% if(messages.error) { %>
+          <span class="text-red-500 text-sm"><%= messages.error %></span>
+          <% } %>
           <input
+            name="phone"
             class="border border-gray-300 p-2 w-1/2 mb-4"
             type="text"
             placeholder="Phone Number" />
           <input
-            class="border border-gray-300 p-2 w-1/2"
+            name="address"
+            class="border border-gray-300 p-2 w-1/2 mb-4"
             type="text"
             placeholder="Address" />
+          <input
+            name="pincode"
+            class="border border-gray-300 p-2 w-1/2"
+            type="text"
+            placeholder="pincode" />
           <div>
             <button
-              class="px-6 py-2 rounded-full text-white font-bold mt-6 btn-primary"
-              type="submit">
+              class="px-6 py-2 rounded-full text-white font-bold mt-6 btn-primary">
               Order Now
             </button>
           </div>
         </form>
       </div>
-      <!-- <a
-        href=""
+      <% }else { %>
+      <a
+        href="/login"
         class="inline-block cursor-pointer btn-primary px-6 py-2 rounded-full text-white font-bold mt-6">
         Log in to continue</a
-      > -->
+      >
+      <% } %>
     </div>
   </div>
   <% }else {%>

@@ -3,6 +3,7 @@ import axios from "axios";
 let cartCounter = document.querySelector("#cartCounter");
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css"; // for React, Vue and Svelte
+import { initAdmin } from "./admin";
 const notyf = new Notyf();
 
 const updateCart = (pizza) => {
@@ -23,3 +24,13 @@ addToCart.forEach((btn) => {
     updateCart(pizza);
   });
 });
+
+// remove alert message after x secound
+const alertMsg = document.getElementById("success-alert");
+if (alertMsg) {
+  setTimeout(() => {
+    alertMsg.remove();
+  }, 3000);
+}
+
+initAdmin();
