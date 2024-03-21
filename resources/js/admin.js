@@ -1,5 +1,7 @@
 import axios from "axios";
 import moment from "moment";
+import { Notyf } from "notyf";
+const notyf = new Notyf();
 
 export function initAdmin(socket) {
   const orderTableBody = document.querySelector("#orderTableBody");
@@ -26,7 +28,7 @@ export function initAdmin(socket) {
     return parsedItems
       .map((menuItem) => {
         return `
-                <p>${menuItem.item.name} - ${menuItem.qty} pcs </p>
+                <p>${menuItem.item.name} - ${menuItem.Quantity} pcs </p>
             `;
       })
       .join("");
@@ -101,4 +103,11 @@ export function initAdmin(socket) {
       .join("");
   }
   // Socket
+  
+  socket.on("orderPlaced", (order) => {
+    notyf.success("New Order Received");
+    orders.unshift(order);
+    orderTableBody.innerHTML = "";
+    orderTableBody.innerHTML = generateMarkup(orders);
+  });
 }

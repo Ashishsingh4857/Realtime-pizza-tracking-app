@@ -12,16 +12,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   initAdmin: () => (/* binding */ initAdmin)
 /* harmony export */ });
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/lib/axios.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/lib/axios.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var notyf__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! notyf */ "./node_modules/notyf/notyf.es.js");
 
 
+
+var notyf = new notyf__WEBPACK_IMPORTED_MODULE_1__.Notyf();
 function initAdmin(socket) {
   var orderTableBody = document.querySelector("#orderTableBody");
   var orders = [];
   var markup;
-  axios__WEBPACK_IMPORTED_MODULE_1__["default"].get("/admin/orders", {
+  axios__WEBPACK_IMPORTED_MODULE_2__["default"].get("/admin/orders", {
     headers: {
       "X-Requested-With": "XMLHttpRequest"
     }
@@ -35,7 +38,7 @@ function initAdmin(socket) {
   function renderItems(items) {
     var parsedItems = Object.values(items);
     return parsedItems.map(function (menuItem) {
-      return "\n                <p>".concat(menuItem.item.name, " - ").concat(menuItem.qty, " pcs </p>\n            ");
+      return "\n                <p>".concat(menuItem.item.name, " - ").concat(menuItem.Quantity, " pcs </p>\n            ");
     }).join("");
   }
   function generateMarkup(orders) {
@@ -44,6 +47,13 @@ function initAdmin(socket) {
     }).join("");
   }
   // Socket
+
+  socket.on("orderPlaced", function (order) {
+    notyf.success("New Order Received");
+    orders.unshift(order);
+    orderTableBody.innerHTML = "";
+    orderTableBody.innerHTML = generateMarkup(orders);
+  });
 }
 
 /***/ }),
@@ -56,19 +66,28 @@ function initAdmin(socket) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! axios */ "./node_modules/axios/lib/axios.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! axios */ "./node_modules/axios/lib/axios.js");
 /* harmony import */ var notyf__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! notyf */ "./node_modules/notyf/notyf.es.js");
 /* harmony import */ var notyf_notyf_min_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! notyf/notyf.min.css */ "./node_modules/notyf/notyf.min.css");
 /* harmony import */ var _admin__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./admin */ "./resources/js/admin.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_3__);
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : String(i); }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 var addToCart = document.querySelectorAll(".add-to-cart");
 
 var cartCounter = document.querySelector("#cartCounter");
 
  // for React, Vue and Svelte
 
+
 var notyf = new notyf__WEBPACK_IMPORTED_MODULE_0__.Notyf();
 var updateCart = function updateCart(pizza) {
-  axios__WEBPACK_IMPORTED_MODULE_3__["default"].post("/update-cart", pizza).then(function (res) {
+  axios__WEBPACK_IMPORTED_MODULE_4__["default"].post("/update-cart", pizza).then(function (res) {
     // console.log(res);
     cartCounter.innerText = res.data.totalQuantity;
     notyf.success("item added to cart");
@@ -91,7 +110,56 @@ if (alertMsg) {
     alertMsg.remove();
   }, 3000);
 }
-(0,_admin__WEBPACK_IMPORTED_MODULE_2__.initAdmin)();
+
+// change order status
+var statuses = document.querySelectorAll(".status_line");
+var hiddenInput = document.querySelector("#hiddenInput");
+var time = document.createElement("small");
+var order = hiddenInput ? hiddenInput.value : null;
+order = JSON.parse(order);
+// console.log(order);
+
+function updateStatus(order) {
+  statuses.forEach(function (status) {
+    status.classList.remove("step-completed");
+    status.classList.remove("current");
+  });
+  var stepCompleted = true;
+  statuses.forEach(function (li) {
+    var dataprop = li.dataset.status;
+    if (stepCompleted) {
+      li.classList.add("step-completed");
+    }
+    if (dataprop === order.status) {
+      stepCompleted = false;
+      time.innerText = moment__WEBPACK_IMPORTED_MODULE_3___default()(order.updatedAt).format("hh:mm A");
+      li.appendChild(time);
+      if (li.nextSibling) {
+        li.nextElementSibling.classList.add("current");
+      }
+    }
+  });
+}
+updateStatus(order);
+
+// socket
+var socket = io();
+(0,_admin__WEBPACK_IMPORTED_MODULE_2__.initAdmin)(socket);
+// join
+if (order) {
+  socket.emit("join", "order_".concat(order._id));
+}
+var adminAreaPath = window.location.pathname;
+if (adminAreaPath.includes("admin")) {
+  socket.emit("join", "adminRoom");
+}
+socket.on("orderUpdated", function (data) {
+  var updatedOrder = _objectSpread({}, order);
+  updatedOrder.updatedAt = moment__WEBPACK_IMPORTED_MODULE_3___default()().format();
+  updatedOrder.status = data.status;
+  updateStatus(updatedOrder);
+  notyf.success("Order Updated");
+});
 
 /***/ }),
 
