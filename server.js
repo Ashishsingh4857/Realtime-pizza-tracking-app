@@ -64,6 +64,10 @@ app.use(expressLayout);
 const route = require("./routes/web");
 route(app);
 
+app.use((req, res) => {
+  res.status(404).render("errors/404");
+});
+
 const server = app.listen(PORT, () => {
   console.log(`listing to port ${PORT}`);
 });

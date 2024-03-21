@@ -1,6 +1,6 @@
 <section class="cart py-16">
   <% if(session.cart){ %>
-  <div class="order container mx-auto w-1/2">
+  <div class="order container mx-auto xl:w-1/2 px-5">
     <div class="flex items-center border-b border-grey-300">
       <img
         src="/img/cart-black.png"
@@ -12,7 +12,7 @@
       <% for(let pizza of Object.values(session.cart.items)) { %>
       <div class="flex items-center my-8">
         <img
-          class="w-24"
+          class="w-20 md:w-24"
           src="/img/<%=pizza.item.image%>"
           alt="" />
         <div class="flex-1 ml-4">

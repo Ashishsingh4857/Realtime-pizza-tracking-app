@@ -42,11 +42,11 @@
       <div>
         <ul class="flex items-center">
           <li class="ml-6"><a href="/">Menu</a></li>
-          <li class="ml-6"><a href="/offers">Offers</a></li>
-          <li class="ml-6"><a href="/contact">Contact</a></li>
+          <!-- 
+          <li class="ml-6"><a href="/contact">Contact</a></li> -->
 
           <% if(user) {%>
-          <li class="ml-6 capitalize">
+          <li class="hidden md:block ml-6 capitalize">
             <a href="/customer/orders"><%= user.name %></a>
           </li>
           <li class="ml-6">
