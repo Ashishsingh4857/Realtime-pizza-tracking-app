@@ -26,16 +26,12 @@ addToCart.forEach((btn) => {
   });
 });
 
-
-
-
-
 // remove alert message after x secound
 const alertMsg = document.getElementById("success-alert");
 if (alertMsg) {
   setTimeout(() => {
     alertMsg.remove();
-  }, 3000);
+  }, 3300);
 }
 
 // change order status
@@ -92,5 +88,3 @@ socket.on("orderUpdated", (data) => {
   updateStatus(updatedOrder);
   notyf.success("Order Updated");
 });
-
-
