@@ -45,6 +45,7 @@ const passportinit = require("./app/config/passport");
 passportinit(passport);
 app.use(passport.initialize());
 app.use(passport.session());
+
 // assets
 app.use(express.static("public"));
 
