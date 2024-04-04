@@ -29,6 +29,7 @@ addToCart.forEach((btn) => {
 
 
 
+
 // remove alert message after x secound
 const alertMsg = document.getElementById("success-alert");
 if (alertMsg) {
